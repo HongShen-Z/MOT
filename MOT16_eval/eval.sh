@@ -21,7 +21,7 @@ done
 # create output folder if it doesn't exist
 if [ ! -d runs/output ]
 then
-	mkdir -p ~/Yolov5_DeepSort_Pytorch/inference/output
+	mkdir -p runs/output
 	echo 'inference output folder created'
 fi
 
