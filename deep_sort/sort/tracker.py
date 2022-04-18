@@ -35,12 +35,13 @@ class Tracker:
     """
     GATING_THRESHOLD = np.sqrt(kalman_filter.chi2inv95[4])
 
-    def __init__(self, metric, max_iou_distance=0.9, max_age=30, n_init=3, _lambda=0):
+    def __init__(self, metric, max_iou_distance=0.9, max_age=30, n_init=3, _lambda=0, _alpha=0):
         self.metric = metric
         self.max_iou_distance = max_iou_distance
         self.max_age = max_age
         self.n_init = n_init
         self._lambda = _lambda
+        self._alpha = _alpha
 
         self.kf = kalman_filter.KalmanFilter()
         self.tracks = []
@@ -115,6 +116,8 @@ class Tracker:
                 )
             ) / self.GATING_THRESHOLD
         pos_gate = pos_cost > 1.0
+        # Compute the IOU-based Cost Matrix
+        iou_cost = iou_matching.iou_cost(tracks, dets, track_indices, detection_indices)
         # Now Compute the Appearance-based Cost Matrix
         app_cost = self.metric.distance(
             np.array([dets[i].feature for i in detection_indices]),
@@ -122,7 +125,7 @@ class Tracker:
         )
         app_gate = app_cost > self.metric.matching_threshold
         # Now combine and threshold
-        cost_matrix = self._lambda * pos_cost + (1 - self._lambda) * app_cost
+        cost_matrix = self._lambda * pos_cost + self._alpha * iou_cost + (1 - self._lambda - self._alpha) * app_cost
         cost_matrix[np.logical_or(pos_gate, app_gate)] = linear_assignment.INFTY_COST
         # Return Matrix
         return cost_matrix
@@ -161,6 +164,63 @@ class Tracker:
         matches = matches_a + matches_b
         unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
         return matches, unmatched_tracks, unmatched_detections
+
+    # def _match(self, detections):
+    #     # Split track set into confirmed and unconfirmed tracks.
+    #     confirmed_tracks = [i for i, t in enumerate(self.tracks) if t.is_confirmed()]
+    #     unconfirmed_tracks = [i for i, t in enumerate(self.tracks) if not t.is_confirmed()]
+    #
+    #     det_candidates_high = []
+    #     det_candidates_low = []
+    #     for i in range(len(detections)):
+    #         if detections[i].confidence > 0.8:
+    #             det_candidates_high.append(i)
+    #         elif detections[i].confidence > 0.4:
+    #             det_candidates_low.append(i)
+    #
+    #     # Associate confirmed tracks using appearance features.
+    #     matches_a, unmatched_tracks_a, unmatched_detections_high = linear_assignment.matching_cascade(
+    #         self._full_cost_metric,
+    #         linear_assignment.INFTY_COST - 1,
+    #         # no need for self.metric.matching_threshold here, according to _full_cost_metric
+    #         self.max_age,
+    #         self.tracks,
+    #         detections,
+    #         confirmed_tracks,
+    #         det_candidates_high
+    #     )
+    #     matches_a1, unmatched_tracks_a1, unmatched_detections_high = linear_assignment.min_cost_matching(
+    #         iou_matching.iou_cost,
+    #         self.max_iou_distance,
+    #         self.tracks,
+    #         detections,
+    #         unconfirmed_tracks,
+    #         unmatched_detections_high,
+    #     )
+    #
+    #     # Associate remaining tracks together with unconfirmed tracks using IOU.
+    #     iou_track_candidates = unmatched_tracks_a1 + unmatched_tracks_a
+    #
+    #     # iou_track_candidates = unmatched_tracks_a1 + [
+    #     #     k for k in unmatched_tracks_a if self.tracks[k].time_since_update in range(1, 9)
+    #     # ]
+    #     # unmatched_tracks_a = [
+    #     #     k for k in unmatched_tracks_a if self.tracks[k].time_since_update not in range(1, 9)
+    #     # ]
+    #
+    #     matches_b, unmatched_tracks_b, unmatched_detections = linear_assignment.min_cost_matching(
+    #         iou_matching.iou_cost,
+    #         self.max_iou_distance,
+    #         self.tracks,
+    #         detections,
+    #         iou_track_candidates,
+    #         det_candidates_low,
+    #     )
+    #
+    #     matches = matches_a + matches_b + matches_a1
+    #     # unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
+    #     unmatched_tracks = list(set(unmatched_tracks_b))
+    #     return matches, unmatched_tracks, unmatched_detections_high
 
     def _initiate_track(self, detection, class_id):
         mean, covariance = self.kf.initiate(detection.to_xyah())
