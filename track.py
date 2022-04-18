@@ -168,7 +168,7 @@ def detect(opt):
                     # im.jpg, vid.mp4, ...
                     save_path = str(save_dir / p.parent.name)
 
-            txt_path = str(save_dir / 'tracks' / txt_file_name)  # im.txt
+            txt_path = str(save_dir / 'tracks_txt' / txt_file_name)  # im.txt
             s += '%gx%g ' % im.shape[2:]  # print string
             imc = im0.copy() if save_crop else im0  # for save_crop
 
