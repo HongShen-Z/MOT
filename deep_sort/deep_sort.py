@@ -51,7 +51,7 @@ class DeepSort(object):
         metric = NearestNeighborDistanceMetric(
             "euclidean", max_cosine_distance, nn_budget)
         self.tracker = Tracker(
-            metric, max_iou_distance=max_iou_distance, max_age=max_age, n_init=n_init, _lambda=0, _alpha=0)
+            metric, max_iou_distance=max_iou_distance, max_age=max_age, n_init=n_init, _lambda=_lambda, _alpha=_alpha)
 
     def update(self, bbox_xywh, confidences, classes, ori_img, use_yolo_preds=False):
         self.height, self.width = ori_img.shape[:2]
