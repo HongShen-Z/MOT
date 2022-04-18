@@ -1,0 +1,188 @@
+Sender: LSF System <lsfadmin@gpu21>
+Subject: Job 243180: <track> in cluster <cluster1> Exited
+
+Job <track> was submitted from host <login01> by user <220205723> in cluster <cluster1> at Mon Apr 18 01:02:23 2022
+Job was executed on host(s) <3*gpu21>, in queue <gpu_v100>, as user <220205723> in cluster <cluster1> at Mon Apr 18 02:20:47 2022
+</seu_share/home/dijunyong/220205723> was used as the home directory.
+</seu_share/home/dijunyong/220205723/projects/MOT> was used as the working directory.
+Started at Mon Apr 18 02:20:47 2022
+Terminated at Mon Apr 18 02:56:54 2022
+Results reported at Mon Apr 18 02:56:54 2022
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+#!/bin/bash
+#BSUB -J track
+#BSUB -o %J.out
+#BSUB -e %J.err
+#BSUB -q gpu_v100
+#BSUB -gpu "num=1:mode=exclusive_process:aff=yes"
+
+module load anaconda3
+source activate
+conda deactivate
+conda activate torch1.10
+
+
+set +e
+
+
+# start from clean slate
+#for i in data.zip MOT16.zip
+#do
+#	zip -T $i
+#	if [ $? -eq 0 ]
+#	then
+#		echo 'zip is ok'
+#
+#	else
+#		echo 'zip corrupted, deleting'
+#		rm -rf $i
+#	fi
+#done
+
+
+# create output folder if it doesn't exist
+if [ ! -d runs/output ]
+then
+	mkdir -p runs/output
+	echo 'inference output folder created'
+fi
+
+
+
+# clone evaluation repo if it does not exist
+if [ ! -d MOT16_eval/TrackEval ]
+then
+	echo 'Cloning official MOT16 evaluation repo'
+	git clone https://github.com/JonathonLuiten/TrackEval TrackEval
+	# download quick start data folder if it does not exist
+	if [ ! -d ~/datasets/MOT/data ]
+	then
+		# download data
+		echo 'Downloading TrackEval data...'
+
+(... more ...)
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time :                                   597.56 sec.
+    Max Memory :                                 2624 MB
+    Average Memory :                             1326.65 MB
+    Total Requested Memory :                     -
+    Delta Memory :                               -
+    Max Swap :                                   28 MB
+    Max Processes :                              5
+    Max Threads :                                75
+    Run time :                                   2167 sec.
+    Turnaround time :                            6871 sec.
+
+The output (if any) follows:
+
+Generating tracking results for each sequence...
+
+Available ReID models for automatic download
+['resnet50_market1501', 'resnet50_dukemtmcreid', 'resnet50_msmt17', 'resnet50_fc512_market1501', 'resnet50_fc512_dukemtmcreid', 'resnet50_fc512_msmt17', 'mlfn_market1501', 'mlfn_dukemtmcreid', 'mlfn_msmt17', 'hacnn_market1501', 'hacnn_dukemtmcreid', 'hacnn_msmt17', 'mobilenetv2_x1_0_market1501', 'mobilenetv2_x1_0_dukemtmcreid', 'mobilenetv2_x1_0_msmt17', 'mobilenetv2_x1_4_market1501', 'mobilenetv2_x1_4_dukemtmcreid', 'mobilenetv2_x1_4_msmt17', 'osnet_x1_0_market1501', 'osnet_x1_0_dukemtmcreid', 'osnet_x1_0_msmt17', 'osnet_x0_75_market1501', 'osnet_x0_75_dukemtmcreid', 'osnet_x0_75_msmt17', 'osnet_x0_5_market1501', 'osnet_x0_5_dukemtmcreid', 'osnet_x0_5_msmt17', 'osnet_x0_25_market1501', 'osnet_x0_25_dukemtmcreid', 'osnet_x0_25_msmt17', 'resnet50_MSMT17', 'osnet_x1_0_MSMT17', 'osnet_x0_75_MSMT17', 'osnet_x0_5_MSMT17', 'osnet_x0_25_MSMT17', 'osnet_ibn_x1_0_MSMT17', 'osnet_ain_x1_0_MSMT17']
+Model: osnet_ibn_x1_0
+- params: 2,194,640
+- flops: 978,878,352
+Successfully loaded pretrained weights from "/seu_share/home/dijunyong/220205723/.cache/torch/checkpoints/osnet_ibn_x1_0_MSMT17.pth"
+** The following layers are discarded due to unmatched keys or layer size: ['classifier.weight', 'classifier.bias']
+
+Available ReID models for automatic download
+['resnet50_market1501', 'resnet50_dukemtmcreid', 'resnet50_msmt17', 'resnet50_fc512_market1501', 'resnet50_fc512_dukemtmcreid', 'resnet50_fc512_msmt17', 'mlfn_market1501', 'mlfn_dukemtmcreid', 'mlfn_msmt17', 'hacnn_market1501', 'hacnn_dukemtmcreid', 'hacnn_msmt17', 'mobilenetv2_x1_0_market1501', 'mobilenetv2_x1_0_dukemtmcreid', 'mobilenetv2_x1_0_msmt17', 'mobilenetv2_x1_4_market1501', 'mobilenetv2_x1_4_dukemtmcreid', 'mobilenetv2_x1_4_msmt17', 'osnet_x1_0_market1501', 'osnet_x1_0_dukemtmcreid', 'osnet_x1_0_msmt17', 'osnet_x0_75_market1501', 'osnet_x0_75_dukemtmcreid', 'osnet_x0_75_msmt17', 'osnet_x0_5_market1501', 'osnet_x0_5_dukemtmcreid', 'osnet_x0_5_msmt17', 'osnet_x0_25_market1501', 'osnet_x0_25_dukemtmcreid', 'osnet_x0_25_msmt17', 'resnet50_MSMT17', 'osnet_x1_0_MSMT17', 'osnet_x0_75_MSMT17', 'osnet_x0_5_MSMT17', 'osnet_x0_25_MSMT17', 'osnet_ibn_x1_0_MSMT17', 'osnet_ain_x1_0_MSMT17']
+Model: osnet_ibn_x1_0
+- params: 2,194,640
+- flops: 978,878,352
+Successfully loaded pretrained weights from "/seu_share/home/dijunyong/220205723/.cache/torch/checkpoints/osnet_ibn_x1_0_MSMT17.pth"
+** The following layers are discarded due to unmatched keys or layer size: ['classifier.weight', 'classifier.bias']
+
+Available ReID models for automatic download
+['resnet50_market1501', 'resnet50_dukemtmcreid', 'resnet50_msmt17', 'resnet50_fc512_market1501', 'resnet50_fc512_dukemtmcreid', 'resnet50_fc512_msmt17', 'mlfn_market1501', 'mlfn_dukemtmcreid', 'mlfn_msmt17', 'hacnn_market1501', 'hacnn_dukemtmcreid', 'hacnn_msmt17', 'mobilenetv2_x1_0_market1501', 'mobilenetv2_x1_0_dukemtmcreid', 'mobilenetv2_x1_0_msmt17', 'mobilenetv2_x1_4_market1501', 'mobilenetv2_x1_4_dukemtmcreid', 'mobilenetv2_x1_4_msmt17', 'osnet_x1_0_market1501', 'osnet_x1_0_dukemtmcreid', 'osnet_x1_0_msmt17', 'osnet_x0_75_market1501', 'osnet_x0_75_dukemtmcreid', 'osnet_x0_75_msmt17', 'osnet_x0_5_market1501', 'osnet_x0_5_dukemtmcreid', 'osnet_x0_5_msmt17', 'osnet_x0_25_market1501', 'osnet_x0_25_dukemtmcreid', 'osnet_x0_25_msmt17', 'resnet50_MSMT17', 'osnet_x1_0_MSMT17', 'osnet_x0_75_MSMT17', 'osnet_x0_5_MSMT17', 'osnet_x0_25_MSMT17', 'osnet_ibn_x1_0_MSMT17', 'osnet_ain_x1_0_MSMT17']
+Model: osnet_ibn_x1_0
+- params: 2,194,640
+- flops: 978,878,352
+Successfully loaded pretrained weights from "/seu_share/home/dijunyong/220205723/.cache/torch/checkpoints/osnet_ibn_x1_0_MSMT17.pth"
+** The following layers are discarded due to unmatched keys or layer size: ['classifier.weight', 'classifier.bias']
+
+Available ReID models for automatic download
+['resnet50_market1501', 'resnet50_dukemtmcreid', 'resnet50_msmt17', 'resnet50_fc512_market1501', 'resnet50_fc512_dukemtmcreid', 'resnet50_fc512_msmt17', 'mlfn_market1501', 'mlfn_dukemtmcreid', 'mlfn_msmt17', 'hacnn_market1501', 'hacnn_dukemtmcreid', 'hacnn_msmt17', 'mobilenetv2_x1_0_market1501', 'mobilenetv2_x1_0_dukemtmcreid', 'mobilenetv2_x1_0_msmt17', 'mobilenetv2_x1_4_market1501', 'mobilenetv2_x1_4_dukemtmcreid', 'mobilenetv2_x1_4_msmt17', 'osnet_x1_0_market1501', 'osnet_x1_0_dukemtmcreid', 'osnet_x1_0_msmt17', 'osnet_x0_75_market1501', 'osnet_x0_75_dukemtmcreid', 'osnet_x0_75_msmt17', 'osnet_x0_5_market1501', 'osnet_x0_5_dukemtmcreid', 'osnet_x0_5_msmt17', 'osnet_x0_25_market1501', 'osnet_x0_25_dukemtmcreid', 'osnet_x0_25_msmt17', 'resnet50_MSMT17', 'osnet_x1_0_MSMT17', 'osnet_x0_75_MSMT17', 'osnet_x0_5_MSMT17', 'osnet_x0_25_MSMT17', 'osnet_ibn_x1_0_MSMT17', 'osnet_ain_x1_0_MSMT17']
+Model: osnet_ibn_x1_0
+- params: 2,194,640
+- flops: 978,878,352
+Successfully loaded pretrained weights from "/seu_share/home/dijunyong/220205723/.cache/torch/checkpoints/osnet_ibn_x1_0_MSMT17.pth"
+** The following layers are discarded due to unmatched keys or layer size: ['classifier.weight', 'classifier.bias']
+
+Available ReID models for automatic download
+['resnet50_market1501', 'resnet50_dukemtmcreid', 'resnet50_msmt17', 'resnet50_fc512_market1501', 'resnet50_fc512_dukemtmcreid', 'resnet50_fc512_msmt17', 'mlfn_market1501', 'mlfn_dukemtmcreid', 'mlfn_msmt17', 'hacnn_market1501', 'hacnn_dukemtmcreid', 'hacnn_msmt17', 'mobilenetv2_x1_0_market1501', 'mobilenetv2_x1_0_dukemtmcreid', 'mobilenetv2_x1_0_msmt17', 'mobilenetv2_x1_4_market1501', 'mobilenetv2_x1_4_dukemtmcreid', 'mobilenetv2_x1_4_msmt17', 'osnet_x1_0_market1501', 'osnet_x1_0_dukemtmcreid', 'osnet_x1_0_msmt17', 'osnet_x0_75_market1501', 'osnet_x0_75_dukemtmcreid', 'osnet_x0_75_msmt17', 'osnet_x0_5_market1501', 'osnet_x0_5_dukemtmcreid', 'osnet_x0_5_msmt17', 'osnet_x0_25_market1501', 'osnet_x0_25_dukemtmcreid', 'osnet_x0_25_msmt17', 'resnet50_MSMT17', 'osnet_x1_0_MSMT17', 'osnet_x0_75_MSMT17', 'osnet_x0_5_MSMT17', 'osnet_x0_25_MSMT17', 'osnet_ibn_x1_0_MSMT17', 'osnet_ain_x1_0_MSMT17']
+Model: osnet_ibn_x1_0
+- params: 2,194,640
+- flops: 978,878,352
+Successfully loaded pretrained weights from "/seu_share/home/dijunyong/220205723/.cache/torch/checkpoints/osnet_ibn_x1_0_MSMT17.pth"
+** The following layers are discarded due to unmatched keys or layer size: ['classifier.weight', 'classifier.bias']
+
+Available ReID models for automatic download
+['resnet50_market1501', 'resnet50_dukemtmcreid', 'resnet50_msmt17', 'resnet50_fc512_market1501', 'resnet50_fc512_dukemtmcreid', 'resnet50_fc512_msmt17', 'mlfn_market1501', 'mlfn_dukemtmcreid', 'mlfn_msmt17', 'hacnn_market1501', 'hacnn_dukemtmcreid', 'hacnn_msmt17', 'mobilenetv2_x1_0_market1501', 'mobilenetv2_x1_0_dukemtmcreid', 'mobilenetv2_x1_0_msmt17', 'mobilenetv2_x1_4_market1501', 'mobilenetv2_x1_4_dukemtmcreid', 'mobilenetv2_x1_4_msmt17', 'osnet_x1_0_market1501', 'osnet_x1_0_dukemtmcreid', 'osnet_x1_0_msmt17', 'osnet_x0_75_market1501', 'osnet_x0_75_dukemtmcreid', 'osnet_x0_75_msmt17', 'osnet_x0_5_market1501', 'osnet_x0_5_dukemtmcreid', 'osnet_x0_5_msmt17', 'osnet_x0_25_market1501', 'osnet_x0_25_dukemtmcreid', 'osnet_x0_25_msmt17', 'resnet50_MSMT17', 'osnet_x1_0_MSMT17', 'osnet_x0_75_MSMT17', 'osnet_x0_5_MSMT17', 'osnet_x0_25_MSMT17', 'osnet_ibn_x1_0_MSMT17', 'osnet_ain_x1_0_MSMT17']
+Model: osnet_ibn_x1_0
+- params: 2,194,640
+- flops: 978,878,352
+Successfully loaded pretrained weights from "/seu_share/home/dijunyong/220205723/.cache/torch/checkpoints/osnet_ibn_x1_0_MSMT17.pth"
+** The following layers are discarded due to unmatched keys or layer size: ['classifier.weight', 'classifier.bias']
+
+Available ReID models for automatic download
+['resnet50_market1501', 'resnet50_dukemtmcreid', 'resnet50_msmt17', 'resnet50_fc512_market1501', 'resnet50_fc512_dukemtmcreid', 'resnet50_fc512_msmt17', 'mlfn_market1501', 'mlfn_dukemtmcreid', 'mlfn_msmt17', 'hacnn_market1501', 'hacnn_dukemtmcreid', 'hacnn_msmt17', 'mobilenetv2_x1_0_market1501', 'mobilenetv2_x1_0_dukemtmcreid', 'mobilenetv2_x1_0_msmt17', 'mobilenetv2_x1_4_market1501', 'mobilenetv2_x1_4_dukemtmcreid', 'mobilenetv2_x1_4_msmt17', 'osnet_x1_0_market1501', 'osnet_x1_0_dukemtmcreid', 'osnet_x1_0_msmt17', 'osnet_x0_75_market1501', 'osnet_x0_75_dukemtmcreid', 'osnet_x0_75_msmt17', 'osnet_x0_5_market1501', 'osnet_x0_5_dukemtmcreid', 'osnet_x0_5_msmt17', 'osnet_x0_25_market1501', 'osnet_x0_25_dukemtmcreid', 'osnet_x0_25_msmt17', 'resnet50_MSMT17', 'osnet_x1_0_MSMT17', 'osnet_x0_75_MSMT17', 'osnet_x0_5_MSMT17', 'osnet_x0_25_MSMT17', 'osnet_ibn_x1_0_MSMT17', 'osnet_ain_x1_0_MSMT17']
+Model: osnet_ibn_x1_0
+- params: 2,194,640
+- flops: 978,878,352
+Successfully loaded pretrained weights from "/seu_share/home/dijunyong/220205723/.cache/torch/checkpoints/osnet_ibn_x1_0_MSMT17.pth"
+** The following layers are discarded due to unmatched keys or layer size: ['classifier.weight', 'classifier.bias']
+Inference on all MOT16 sequences DONE
+Moving data from experiment folder to MOT16
+
+Eval Config:
+USE_PARALLEL         : False                         
+NUM_PARALLEL_CORES   : 4                             
+BREAK_ON_ERROR       : True                          
+RETURN_ON_ERROR      : False                         
+LOG_ON_ERROR         : /seu_share/home/dijunyong/220205723/projects/MOT/MOT16_eval/TrackEval/error_log.txt
+PRINT_RESULTS        : True                          
+PRINT_ONLY_COMBINED  : False                         
+PRINT_CONFIG         : True                          
+TIME_PROGRESS        : True                          
+DISPLAY_LESS_PROGRESS : False                         
+OUTPUT_SUMMARY       : True                          
+OUTPUT_EMPTY_CLASSES : True                          
+OUTPUT_DETAILED      : True                          
+PLOT_CURVES          : True                          
+
+MotChallenge2DBox Config:
+PRINT_CONFIG         : True                          
+GT_FOLDER            : /seu_share/home/dijunyong/220205723/projects/MOT/MOT16_eval/TrackEval/data/gt/mot_challenge/
+TRACKERS_FOLDER      : /seu_share/home/dijunyong/220205723/projects/MOT/MOT16_eval/TrackEval/data/trackers/mot_challenge/
+OUTPUT_FOLDER        : None                          
+TRACKERS_TO_EVAL     : ['ch_yolov5m_deep_sort']      
+CLASSES_TO_EVAL      : ['pedestrian']                
+BENCHMARK            : MOT16                         
+SPLIT_TO_EVAL        : train                         
+INPUT_AS_ZIP         : False                         
+DO_PREPROC           : True                          
+TRACKER_SUB_FOLDER   : data                          
+OUTPUT_SUB_FOLDER    :                               
+TRACKER_DISPLAY_NAMES : None                          
+SEQMAP_FOLDER        : None                          
+SEQMAP_FILE          : None                          
+SEQ_INFO             : None                          
+GT_LOC_FORMAT        : {gt_folder}/{seq}/gt/gt.txt   
+SKIP_SPLIT_FOL       : False                         
+no seqmap found: /seu_share/home/dijunyong/220205723/projects/MOT/MOT16_eval/TrackEval/data/gt/mot_challenge/seqmaps/MOT16-train.txt
+
+
+PS:
+
+Read file <243180.err> for stderr output of this job.
+
