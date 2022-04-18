@@ -68,7 +68,7 @@ def detect(opt):
     exp_name = exp_name + "_" + deep_sort_model.split('/')[-1].split('.')[0]
     # increment run if project name exists
     save_dir = increment_path(Path(project) / exp_name, exist_ok=exist_ok)
-    (save_dir / 'tracks' if save_txt else save_dir).mkdir(parents=True,
+    (save_dir / 'tracks_txt' if save_txt else save_dir).mkdir(parents=True,
                                                           exist_ok=True)  # make dir
 
     # Load model

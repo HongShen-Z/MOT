@@ -13,6 +13,8 @@ conda activate torch1.10
 
 set +e
 
+exp_name=crowdhuman_yolov5m_osnet_ibn_x1_0_MSMT17
+split_to_eval=test
 
 # start from clean slate
 #for i in data.zip MOT16.zip
@@ -29,15 +31,6 @@ set +e
 #done
 
 
-# create output folder if it doesn't exist
-if [ ! -d runs/output ]
-then
-	mkdir -p runs/output
-	echo 'inference output folder created'
-fi
-
-
-
 # clone evaluation repo if it does not exist
 if [ ! -d MOT16_eval/TrackEval ]
 then
@@ -48,20 +41,13 @@ then
 	then
 		# download data
 		echo 'Downloading TrackEval data...'
-		wget -nc https://omnomnom.vision.rwth-aachen.de/data/TrackEval/data.zip -O ~/Yolov5_DeepSort_Pytorch/data.zip
+		wget -nc https://omnomnom.vision.rwth-aachen.de/data/TrackEval/data.zip -O ~/datasets/MOT/data.zip
 		# unzip
-		unzip -q ~/Yolov5_DeepSort_Pytorch/data.zip -d ~/Yolov5_DeepSort_Pytorch/MOT16_eval/TrackEval/
+		unzip -q ~/datasets/MOT/data.zip
 		echo 'Done.'
 		# delete zip
-		#rm data.zip
+		rm ~/datasets/MOT/data.zip
 	fi
-fi
-
-
-# create MOT16 folder if it doesn't exist
-if [ ! -d MOT16_eval/TrackEval/data/MOT16 ]
-then
-	mkdir -p MOT16_eval/TrackEval/data/MOT16
 fi
 
 
@@ -70,17 +56,17 @@ if [[ ! -d ~/datasets/MOT/MOT16/train ]] && [[ ! -d ~/datasets/MOT/MOT16/test ]]
 then
 	# download data
 	echo 'Downloading MOT16 data...'
-	wget -nc https://motchallenge.net/data/MOT16.zip -O ~/Yolov5_DeepSort_Pytorch/MOT16.zip
+	wget -nc https://motchallenge.net/data/MOT16.zip -O ~/datasets/MOT/MOT16.zip
 	# unzip
-    unzip -q MOT16.zip -d ~/Yolov5_DeepSort_Pytorch/MOT16_eval/TrackEval/data/MOT16/
+    unzip -q ~/datasets/MOT/MOT16.zip
     echo 'Done.'
 	# delete zip
-	#rm MOT16.zip
+	rm ~/datasets/MOT/MOT16.zip
 fi
 
 
 # create folder to place tracking results for this method
-mkdir -p MOT16_eval/TrackEval/data/trackers/mot_challenge/MOT16-train/ch_yolov5m_deep_sort/data/
+mkdir -p MOT16_eval/TrackEval/data/trackers/mot_challenge/MOT16-"$(split_to_eval)"/"$(exp_name)"/data/
 
 # inference on 4 MOT16 video sequences at the same time
 # suits a 4GB GRAM GPU, feel free to increase if you have more memory
@@ -92,9 +78,9 @@ for i in MOT16-02 MOT16-04 MOT16-05 MOT16-09 MOT16-10 MOT16-11 MOT16-13
 do
 	(
 		# change name to inference source so that each thread write to its own .txt file
-		if [ ! -d ~/datasets/MOT/MOT16/train/$i/$i ]
+		if [ ! -d ~/datasets/MOT/MOT16/"$(split_to_eval)"/$i/$i ]
 		then
-			mv ~/datasets/MOT/MOT16/train/$i/img1/ ~/datasets/MOT/MOT16/train/$i/$i
+			mv ~/datasets/MOT/MOT16/"$(split_to_eval)"/$i/img1/ ~/datasets/MOT/MOT16/"$(split_to_eval)"/$i/$i
 		fi
 		# run inference on sequence frames
 		python3 track.py --source ~/datasets/MOT/MOT16/train/$i/$i --save-txt --evaluate --yolo_model ~/.cache/torch/checkpoints/crowdhuman_yolov5m.pt --classes 0 --exist-ok --device $CUDA_VISIBLE_DEVICES
@@ -116,10 +102,10 @@ wait
 echo "Inference on all MOT16 sequences DONE"
 
 echo "Moving data from experiment folder to MOT16"
-mv runs/track/exp/* \
-   MOT16_eval/TrackEval/data/trackers/mot_challenge/MOT16-train/ch_yolov5m_deep_sort/data/
+mv runs/track/"$(exp_name)"/tracks_txt/* \
+   MOT16_eval/TrackEval/data/trackers/mot_challenge/MOT16-"$(split_to_eval)"/"$(exp_name)"/data/
 
 # run the evaluation
 python MOT16_eval/TrackEval/scripts/run_mot_challenge.py --BENCHMARK MOT16 \
- --TRACKERS_TO_EVAL ch_yolov5m_deep_sort --SPLIT_TO_EVAL train --METRICS CLEAR Identity \
- --USE_PARALLEL False --NUM_PARALLEL_CORES 4
+ --TRACKERS_TO_EVAL exp_name --SPLIT_TO_EVAL split_to_eval --METRICS CLEAR Identity \
+ --USE_PARALLEL False --NUM_PARALLEL_CORES 4 --GT_FOLDER ~/datasets/MOT/data/gt/mot_challenge/
