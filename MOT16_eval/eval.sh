@@ -108,4 +108,4 @@ mv runs/track/$exp_name/tracks_txt/* \
 python MOT16_eval/TrackEval/scripts/run_mot_challenge.py --BENCHMARK MOT16 \
  --TRACKERS_TO_EVAL $exp_name --SPLIT_TO_EVAL train --METRICS CLEAR Identity \
  --USE_PARALLEL False --NUM_PARALLEL_CORES 4 --GT_FOLDER ~/datasets/MOT/data/gt/mot_challenge/ \
- --TRACKERS_FOLDER MOT16_eval/TrackEval/data/trackers/
+ --TRACKERS_FOLDER MOT16_eval/TrackEval/data/trackers/ --SKIP_SPLIT_FOL True
