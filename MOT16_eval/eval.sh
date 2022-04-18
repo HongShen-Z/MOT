@@ -65,7 +65,7 @@ fi
 
 
 # create folder to place tracking results for this method
-mkdir -p MOT16_eval/TrackEval/data/trackers/mot_challenge/MOT16-train/$exp_name/data/
+mkdir -p MOT16_eval/TrackEval/data/trackers/$exp_name/data/
 
 # inference on 4 MOT16 video sequences at the same time
 # suits a 4GB GRAM GPU, feel free to increase if you have more memory
@@ -102,9 +102,10 @@ echo "Inference on all MOT16 sequences DONE"
 
 echo "Moving data from experiment folder to MOT16"
 mv runs/track/$exp_name/tracks_txt/* \
-   MOT16_eval/TrackEval/data/trackers/mot_challenge/MOT16-train/$exp_name/data/
+   MOT16_eval/TrackEval/data/trackers/$exp_name/data/
 
 # run the evaluation
 python MOT16_eval/TrackEval/scripts/run_mot_challenge.py --BENCHMARK MOT16 \
  --TRACKERS_TO_EVAL $exp_name --SPLIT_TO_EVAL train --METRICS CLEAR Identity \
- --USE_PARALLEL False --NUM_PARALLEL_CORES 4 --GT_FOLDER ~/datasets/MOT/data/gt/mot_challenge/
+ --USE_PARALLEL False --NUM_PARALLEL_CORES 4 --GT_FOLDER ~/datasets/MOT/data/gt/mot_challenge/ \
+ --TRACKERS_FOLDER MOT16_eval/TrackEval/data/trackers/
