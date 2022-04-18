@@ -263,7 +263,7 @@ def detect(opt):
     LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS, %.1fms deep sort update \
         per image at shape {(1, 3, *imgsz)}' % t)
     if save_txt or save_vid:
-        s = f"\n{len(list(save_dir.glob('tracks/*.txt')))} tracks saved to {save_dir / 'tracks'}" if save_txt else ''
+        s = f"\n{len(list(save_dir.glob('tracks_txt/*.txt')))} tracks saved to {save_dir / 'tracks_txt'}" if save_txt else ''
         LOGGER.info(f"Results saved to {colorstr('bold', save_dir)}{s}")
     if update:
         # update model (to fix SourceChangeWarning)
