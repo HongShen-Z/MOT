@@ -13,8 +13,7 @@ conda activate torch1.10
 
 set +e
 
-exp_name=crowdhuman_yolov5m_osnet_ibn_x1_0_MSMT17
-split_to_eval=test
+exp_name='crowdhuman_yolov5m_osnet_ibn_x1_0_MSMT17'
 
 # start from clean slate
 #for i in data.zip MOT16.zip
@@ -66,7 +65,7 @@ fi
 
 
 # create folder to place tracking results for this method
-mkdir -p MOT16_eval/TrackEval/data/trackers/mot_challenge/MOT16-"$(split_to_eval)"/"$(exp_name)"/data/
+mkdir -p MOT16_eval/TrackEval/data/trackers/mot_challenge/MOT16-train/$exp_name/data/
 
 # inference on 4 MOT16 video sequences at the same time
 # suits a 4GB GRAM GPU, feel free to increase if you have more memory
@@ -78,9 +77,9 @@ for i in MOT16-02 MOT16-04 MOT16-05 MOT16-09 MOT16-10 MOT16-11 MOT16-13
 do
 	(
 		# change name to inference source so that each thread write to its own .txt file
-		if [ ! -d ~/datasets/MOT/MOT16/"$(split_to_eval)"/$i/$i ]
+		if [ ! -d ~/datasets/MOT/MOT16/train/$i/$i ]
 		then
-			mv ~/datasets/MOT/MOT16/"$(split_to_eval)"/$i/img1/ ~/datasets/MOT/MOT16/"$(split_to_eval)"/$i/$i
+			mv ~/datasets/MOT/MOT16/train/$i/img1/ ~/datasets/MOT/MOT16/train/$i/$i
 		fi
 		# run inference on sequence frames
 		python3 track.py --source ~/datasets/MOT/MOT16/train/$i/$i --save-txt --evaluate --yolo_model ~/.cache/torch/checkpoints/crowdhuman_yolov5m.pt --classes 0 --exist-ok --device $CUDA_VISIBLE_DEVICES
@@ -102,10 +101,10 @@ wait
 echo "Inference on all MOT16 sequences DONE"
 
 echo "Moving data from experiment folder to MOT16"
-mv runs/track/"$(exp_name)"/tracks_txt/* \
-   MOT16_eval/TrackEval/data/trackers/mot_challenge/MOT16-"$(split_to_eval)"/"$(exp_name)"/data/
+mv runs/track/$exp_name/tracks_txt/* \
+   MOT16_eval/TrackEval/data/trackers/mot_challenge/MOT16-train/$exp_name/data/
 
 # run the evaluation
 python MOT16_eval/TrackEval/scripts/run_mot_challenge.py --BENCHMARK MOT16 \
- --TRACKERS_TO_EVAL exp_name --SPLIT_TO_EVAL split_to_eval --METRICS CLEAR Identity \
+ --TRACKERS_TO_EVAL $exp_name --SPLIT_TO_EVAL train --METRICS CLEAR Identity \
  --USE_PARALLEL False --NUM_PARALLEL_CORES 4 --GT_FOLDER ~/datasets/MOT/data/gt/mot_challenge/
