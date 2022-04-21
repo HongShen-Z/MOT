@@ -116,6 +116,8 @@ class Tracker:
                 )
             ) / self.GATING_THRESHOLD
         pos_gate = pos_cost > 1.0
+        print(pos_cost.min(), pos_cost.mean(), pos_cost.max())
+        print(pos_cost.shape, pos_gate.shape)
         # Compute the IOU-based Cost Matrix
         iou_cost = iou_matching.iou_cost(tracks, dets, track_indices, detection_indices)
         # Now Compute the Appearance-based Cost Matrix
@@ -124,9 +126,11 @@ class Tracker:
             np.array([tracks[i].track_id for i in track_indices]),
         )
         app_gate = app_cost > self.metric.matching_threshold
+        print(app_cost.min(), app_cost.mean(), app_cost.max())
+        print(app_cost.shape, app_gate.shape)
         # Now combine and threshold
         cost_matrix = self._lambda * pos_cost + self._alpha * iou_cost + (1 - self._lambda - self._alpha) * app_cost
-        cost_matrix[np.logical_or(pos_gate, app_gate)] = linear_assignment.INFTY_COST
+        # cost_matrix[np.logical_or(pos_gate, app_gate)] = linear_assignment.INFTY_COST
         # Return Matrix
         return cost_matrix
 
