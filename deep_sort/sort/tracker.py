@@ -124,15 +124,15 @@ class Tracker:
             np.array([tracks[i].track_id for i in track_indices]),
         )
         app_gate = app_cost > self.metric.matching_threshold
-        print(pos_cost.min(), app_cost.min())
-        print(iou_cost.min(), iou_cost.mean(), iou_cost.max())
-        print(pos_gate.size, pos_gate.sum())
-        print(app_gate.size, app_gate.sum())
+        print('pos_min: ', pos_cost.min(), 'app_min: ', app_cost.min())
+        print('iou_min: ', iou_cost.min(), 'iou_mean: ', iou_cost.mean(), 'iou_max: ', iou_cost.max())
+        print('pos: ', pos_gate.size, pos_gate.sum())
+        print('app: ', app_gate.size, app_gate.sum())
         # Now combine and threshold
         cost_matrix = self._lambda * pos_cost + self._alpha * iou_cost + (1 - self._lambda - self._alpha) * app_cost
         cost_matrix[np.logical_or(pos_gate, app_gate)] = linear_assignment.INFTY_COST
         a = np.logical_or(pos_gate, app_gate)
-        print(cost_matrix.size, a.sum())
+        print('cost matrix: ', cost_matrix.size, a.sum())
         # Return Matrix
         return cost_matrix
 
