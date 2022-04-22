@@ -49,7 +49,7 @@ class DeepSort(object):
 
         max_cosine_distance = max_dist
         metric = NearestNeighborDistanceMetric(
-            "euclidean", max_cosine_distance, nn_budget)
+            "cosine", max_cosine_distance, nn_budget)    # euclidean
         self.tracker = Tracker(
             metric, max_iou_distance=max_iou_distance, max_age=max_age, n_init=n_init, _lambda=_lambda, _alpha=_alpha)
 
