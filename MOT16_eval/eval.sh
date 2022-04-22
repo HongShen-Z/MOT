@@ -13,8 +13,8 @@ conda activate torch1.10
 
 set +e
 
-# exp_name='cd_v5m_osnet_ibn_x1_0_MSMT17'
-exp_name='cd_v5m_osnet_x0_25'
+exp_name='cd_v5m_osnet_ibn_x1_0_MSMT17'
+# exp_name='cd_v5m_osnet_x0_25'
 
 # start from clean slate
 #for i in data.zip MOT16.zip
