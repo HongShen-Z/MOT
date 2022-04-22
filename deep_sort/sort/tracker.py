@@ -123,7 +123,7 @@ class Tracker:
             np.array([dets[i].feature for i in detection_indices]),
             np.array([tracks[i].track_id for i in track_indices]),
         )
-        app_gate = app_cost > 0     # self.metric.matching_threshold
+        app_gate = app_cost > self.metric.matching_threshold
         # print('pos_min: ', pos_cost.min(), 'app_min: ', app_cost.min())
         # print('iou_min: ', iou_cost.min(), 'iou_mean: ', iou_cost.mean(), 'iou_max: ', iou_cost.max())
         # print('pos: ', pos_gate.shape, pos_gate.size, pos_gate.sum())
