@@ -150,7 +150,6 @@ class Tracker:
             detections,
             confirmed_tracks,
         )
-        print(len(matches_a))
 
         # Associate remaining tracks together with unconfirmed tracks using IOU.
         iou_track_candidates = unconfirmed_tracks + [
