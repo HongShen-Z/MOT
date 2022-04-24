@@ -16,20 +16,6 @@ set +e
 exp_name='exp_0_0.5_0.5_x0.7_0.1'
 # exp_name='cd_v5m_osnet_x0_25'
 
-# start from clean slate
-#for i in data.zip MOT16.zip
-#do
-#	zip -T $i
-#	if [ $? -eq 0 ]
-#	then
-#		echo 'zip is ok'
-#
-#	else
-#		echo 'zip corrupted, deleting'
-#		rm -rf $i
-#	fi
-#done
-
 
 # clone evaluation repo if it does not exist
 if [ ! -d MOT16_eval/TrackEval ]
