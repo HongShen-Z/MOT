@@ -179,9 +179,9 @@ class Tracker:
         det_candidates_high = []
         det_candidates_low = []
         for i in range(len(detections)):
-            if detections[i].confidence > 0.8:
+            if detections[i].confidence > 0.6:
                 det_candidates_high.append(i)
-            elif detections[i].confidence > 0.4:
+            elif detections[i].confidence > 0.3:
                 det_candidates_low.append(i)
 
         # Associate confirmed tracks using appearance features.
@@ -192,20 +192,12 @@ class Tracker:
             self.max_age,
             self.tracks,
             detections,
-            confirmed_tracks,
+            confirmed_tracks + unconfirmed_tracks,
             det_candidates_high
-        )
-        matches_a1, unmatched_tracks_a1, unmatched_detections_high = linear_assignment.min_cost_matching(
-            iou_matching.iou_cost,
-            self.max_iou_distance,
-            self.tracks,
-            detections,
-            unconfirmed_tracks,
-            unmatched_detections_high,
         )
 
         # Associate remaining tracks together with unconfirmed tracks using IOU.
-        iou_track_candidates = unmatched_tracks_a1 + unmatched_tracks_a
+        iou_track_candidates = unmatched_tracks_a
 
         # iou_track_candidates = unmatched_tracks_a1 + [
         #     k for k in unmatched_tracks_a if self.tracks[k].time_since_update in range(1, 9)
@@ -214,7 +206,7 @@ class Tracker:
         #     k for k in unmatched_tracks_a if self.tracks[k].time_since_update not in range(1, 9)
         # ]
 
-        matches_b, unmatched_tracks_b, unmatched_detections = linear_assignment.min_cost_matching(
+        matches_b, unmatched_tracks_b, unmatched_detections_low = linear_assignment.min_cost_matching(
             iou_matching.iou_cost,
             self.max_iou_distance,
             self.tracks,
@@ -223,7 +215,7 @@ class Tracker:
             det_candidates_low,
         )
 
-        matches = matches_a + matches_b + matches_a1
+        matches = matches_a + matches_b
         # unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
         unmatched_tracks = list(set(unmatched_tracks_b))
         return matches, unmatched_tracks, unmatched_detections_high
