@@ -87,8 +87,8 @@ class Tracker:
         active_targets = [t.track_id for t in self.tracks if t.is_confirmed()]
         features, targets = [], []
         for track in self.tracks:
-            if not track.is_confirmed():
-                continue
+            # if not track.is_confirmed():
+            #     continue
             features += track.features
             targets += [track.track_id for _ in track.features]
             track.features = []
@@ -201,12 +201,12 @@ class Tracker:
             linear_assignment.INFTY_COST - 1,
             self.tracks,
             detections,
-            confirmed_tracks,
+            confirmed_tracks + unconfirmed_tracks,
             det_candidates_high,
         )
 
         # Associate remaining tracks together with unconfirmed tracks using IOU.
-        iou_track_candidates = unmatched_tracks_a + unconfirmed_tracks
+        iou_track_candidates = unmatched_tracks_a
 
         # iou_track_candidates = unmatched_tracks_a1 + [
         #     k for k in unmatched_tracks_a if self.tracks[k].time_since_update in range(1, 9)
