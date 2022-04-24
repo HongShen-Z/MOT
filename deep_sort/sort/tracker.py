@@ -87,8 +87,8 @@ class Tracker:
         active_targets = [t.track_id for t in self.tracks if t.is_confirmed()]
         features, targets = [], []
         for track in self.tracks:
-            # if not track.is_confirmed():
-            #     continue
+            if not track.is_confirmed():
+                continue
             features += track.features
             targets += [track.track_id for _ in track.features]
             track.features = []
@@ -201,12 +201,21 @@ class Tracker:
             linear_assignment.INFTY_COST - 1,
             self.tracks,
             detections,
-            confirmed_tracks + unconfirmed_tracks,
+            confirmed_tracks,
             det_candidates_high,
         )
 
+        matches_b, unmatched_tracks_b, unmatched_detections_high = linear_assignment.min_cost_matching(
+            iou_matching.iou_cost,
+            self.max_iou_distance,
+            self.tracks,
+            detections,
+            unconfirmed_tracks,
+            unmatched_detections_high,
+        )
+
         # Associate remaining tracks together with unconfirmed tracks using IOU.
-        iou_track_candidates = unmatched_tracks_a
+        iou_track_candidates = unmatched_tracks_a + unmatched_tracks_b
 
         # iou_track_candidates = unmatched_tracks_a1 + [
         #     k for k in unmatched_tracks_a if self.tracks[k].time_since_update in range(1, 9)
@@ -215,7 +224,7 @@ class Tracker:
         #     k for k in unmatched_tracks_a if self.tracks[k].time_since_update not in range(1, 9)
         # ]
 
-        matches_b, unmatched_tracks_b, unmatched_detections_low = linear_assignment.min_cost_matching(
+        matches_c, unmatched_tracks_c, unmatched_detections_low = linear_assignment.min_cost_matching(
             iou_matching.iou_cost,
             self.max_iou_distance,
             self.tracks,
@@ -224,9 +233,9 @@ class Tracker:
             det_candidates_low,
         )
 
-        matches = matches_a + matches_b
+        matches = matches_a + matches_b + matches_c
         # unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
-        unmatched_tracks = list(set(unmatched_tracks_b))
+        unmatched_tracks = list(set(unmatched_tracks_c))
         return matches, unmatched_tracks, unmatched_detections_high
 
     def _initiate_track(self, detection, class_id):
