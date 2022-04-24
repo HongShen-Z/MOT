@@ -185,15 +185,24 @@ class Tracker:
                 det_candidates_low.append(i)
 
         # Associate confirmed tracks using appearance features.
-        matches_a, unmatched_tracks_a, unmatched_detections_high = linear_assignment.matching_cascade(
+        # matches_a, unmatched_tracks_a, unmatched_detections_high = linear_assignment.matching_cascade(
+        #     self._full_cost_metric,
+        #     linear_assignment.INFTY_COST - 1,
+        #     # no need for self.metric.matching_threshold here, according to _full_cost_metric
+        #     self.max_age,
+        #     self.tracks,
+        #     detections,
+        #     confirmed_tracks,
+        #     det_candidates_high
+        # )
+
+        matches_a, unmatched_tracks_a, unmatched_detections_high = linear_assignment.min_cost_matching(
             self._full_cost_metric,
             linear_assignment.INFTY_COST - 1,
-            # no need for self.metric.matching_threshold here, according to _full_cost_metric
-            self.max_age,
             self.tracks,
             detections,
             confirmed_tracks + unconfirmed_tracks,
-            det_candidates_high
+            det_candidates_high,
         )
 
         # Associate remaining tracks together with unconfirmed tracks using IOU.

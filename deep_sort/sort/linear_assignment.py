@@ -115,9 +115,8 @@ def matching_cascade(
 
     unmatched_detections = detection_indices
     matches = []
-    print(track_indices, not track_indices)
-    if not track_indices:
-        return [], [], unmatched_detections
+    # if not track_indices:
+    #     return [], [], unmatched_detections
     for level in range(cascade_depth):
         if len(unmatched_detections) == 0:  # No detections left
             break
