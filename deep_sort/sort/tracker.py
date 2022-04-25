@@ -207,7 +207,7 @@ class Tracker:
 
         matches_c, unmatched_tracks_c, unmatched_detections_low = linear_assignment.min_cost_matching(
             iou_matching.iou_cost,
-            self.max_iou_distance - 0.5,
+            self.max_iou_distance - 0.3,
             self.tracks,
             detections,
             iou_track_candidates,
