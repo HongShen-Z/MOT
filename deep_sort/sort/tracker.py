@@ -184,22 +184,13 @@ class Tracker:
             elif detections[i].confidence > 0.3:
                 det_candidates_low.append(i)
 
-        # matches_a, unmatched_tracks_a, unmatched_detections_high = linear_assignment.min_cost_matching(
-        #     self._full_cost_metric,
-        #     linear_assignment.INFTY_COST - 1,
-        #     self.tracks,
-        #     detections,
-        #     confirmed_tracks,
-        #     det_candidates_high,
-        # )
-        matches_a, unmatched_tracks_a, unmatched_detections_high = linear_assignment.matching_cascade(
+        matches_a, unmatched_tracks_a, unmatched_detections_high = linear_assignment.min_cost_matching(
             self._full_cost_metric,
-            linear_assignment.INFTY_COST - 1,  # no need for self.metric.matching_threshold here,
-            self.max_age,
+            linear_assignment.INFTY_COST - 1,
             self.tracks,
             detections,
             confirmed_tracks,
-            det_candidates_high
+            det_candidates_high,
         )
 
         matches_b, unmatched_tracks_b, unmatched_detections_high = linear_assignment.min_cost_matching(
@@ -216,7 +207,7 @@ class Tracker:
 
         matches_c, unmatched_tracks_c, unmatched_detections_low = linear_assignment.min_cost_matching(
             iou_matching.iou_cost,
-            self.max_iou_distance - 0.3,
+            self.max_iou_distance - 0.2,
             self.tracks,
             detections,
             iou_track_candidates,
