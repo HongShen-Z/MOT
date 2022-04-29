@@ -179,7 +179,7 @@ class Tracker:
         det_candidates_high = []
         det_candidates_low = []
         for i in range(len(detections)):
-            if detections[i].confidence > 0.8:
+            if detections[i].confidence > 0.7:
                 det_candidates_high.append(i)
             elif detections[i].confidence > 0.3:
                 det_candidates_low.append(i)
@@ -207,7 +207,7 @@ class Tracker:
 
         matches_c, unmatched_tracks_c, unmatched_detections_low = linear_assignment.min_cost_matching(
             iou_matching.iou_cost,
-            self.max_iou_distance - 0.2,
+            self.max_iou_distance - 0.3,
             self.tracks,
             detections,
             iou_track_candidates,
