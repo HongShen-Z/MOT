@@ -209,7 +209,7 @@ def detect(opt):
                         bbox_w = output[2] - output[0]
                         bbox_h = output[3] - output[1]
 
-                        vertical = bbox_w / bbox_h < 1
+                        vertical = bbox_w / bbox_h < 0.8
                         # for Pedestrian
                         if not vertical:
                             continue
