@@ -203,16 +203,22 @@ def detect(opt):
                 if len(outputs[i]) > 0:
                     for j, (output, conf) in enumerate(zip(outputs[i], confs)):
 
-                        bboxes = output[0:4]
+                        # to MOT format
+                        bbox_left = output[0]
+                        bbox_top = output[1]
+                        bbox_w = output[2] - output[0]
+                        bbox_h = output[3] - output[1]
+
+                        vertical = bbox_w / bbox_h < 1
+                        # for Pedestrian
+                        if not vertical:
+                            continue
+
                         id = output[4]
                         cls = output[5]
 
                         if save_txt:
-                            # to MOT format
-                            bbox_left = output[0]
-                            bbox_top = output[1]
-                            bbox_w = output[2] - output[0]
-                            bbox_h = output[3] - output[1]
+
                             # Write MOT compliant results to file
                             with open(txt_path + '.txt', 'a') as f:
                                 f.write(('%g, ' * 9 + '%g' + '\n') % (frame_idx + 1, id, bbox_left,  # MOT format
@@ -221,6 +227,7 @@ def detect(opt):
                         if save_vid or save_crop or show_vid:  # Add bbox to image
                             c = int(cls)  # integer class
                             label = f'{id} {names[c]} {conf:.2f}'
+                            bboxes = output[0:4]
                             annotator.box_label(
                                 bboxes, label, color=colors(c, True))
                             if save_crop:
