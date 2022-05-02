@@ -40,10 +40,10 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 def detect(opt):
     out, source, yolo_model, deep_sort_model, show_vid, save_vid, save_txt, imgsz, evaluate, half, \
-        project, exist_ok, update, save_crop, name = \
+        project, exist_ok, update, save_crop, name, aspect_ratio = \
         opt.output, opt.source, opt.yolo_model, opt.deep_sort_model, opt.show_vid, opt.save_vid, \
         opt.save_txt, opt.imgsz, opt.evaluate, opt.half, opt.project, opt.exist_ok, opt.update, \
-        opt.save_crop, opt.name
+        opt.save_crop, opt.name, opt.aspect_ratio
     webcam = source == '0' or source.startswith(
         'rtsp') or source.startswith('http') or source.endswith('.txt')
 
@@ -209,7 +209,7 @@ def detect(opt):
                         bbox_w = output[2] - output[0]
                         bbox_h = output[3] - output[1]
 
-                        vertical = bbox_w / bbox_h < 0.7
+                        vertical = bbox_w / bbox_h < aspect_ratio
                         # for Pedestrian
                         if not vertical:
                             continue
@@ -309,6 +309,7 @@ if __name__ == '__main__':
     parser.add_argument('--project', default=ROOT / 'runs/track', help='save results to project/name')
     parser.add_argument('--name', default='exp', help='save results to project/name')
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
+    parser.add_argument('--aspect-ratio', type=float, default=1, help='Aspect ratio threshold for detections')
     opt = parser.parse_args()
     opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
 
