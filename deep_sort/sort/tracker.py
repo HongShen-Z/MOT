@@ -130,7 +130,7 @@ class Tracker:
         # print('app: ', app_gate.shape, app_gate.size, app_gate.sum())
         # Now combine and threshold
         cost_matrix = self._lambda * pos_cost + self._alpha * iou_cost + (1 - self._lambda - self._alpha) * app_cost
-        cost_matrix[app_gate] = linear_assignment.INFTY_COST
+        # cost_matrix[app_gate] = linear_assignment.INFTY_COST
         # cost_matrix[np.logical_or(pos_gate, app_gate)] = linear_assignment.INFTY_COST
         # a = np.logical_or(pos_gate, app_gate)
         # print('cost matrix: ', cost_matrix.shape, cost_matrix.size, a.sum())
