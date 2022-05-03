@@ -13,7 +13,7 @@ conda activate torch1.10
 
 set +e
 
-exp_name='exp_0_0.2_0.8'
+exp_name='exp_0_0.3_0.7'
 # exp_name='cd_v5m_osnet_x0_25'
 
 
