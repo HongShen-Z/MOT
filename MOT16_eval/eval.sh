@@ -17,38 +17,38 @@ exp_name='exp_0_0_1'
 # exp_name='cd_v5m_osnet_x0_25'
 
 
-# clone evaluation repo if it does not exist
-if [ ! -d MOT16_eval/TrackEval ]
-then
-	echo 'Cloning official MOT16 evaluation repo'
-	git clone https://github.com/JonathonLuiten/TrackEval TrackEval
-	# download quick start data folder if it does not exist
-	if [ ! -d ~/datasets/MOT/data ]
-	then
-		# download data
-		echo 'Downloading TrackEval data...'
-		wget -nc https://omnomnom.vision.rwth-aachen.de/data/TrackEval/data.zip -O ~/datasets/MOT/data.zip
-		# unzip
-		unzip -q ~/datasets/MOT/data.zip
-		echo 'Done.'
-		# delete zip
-		rm ~/datasets/MOT/data.zip
-	fi
-fi
-
-
-# if MOT16 data not unziped, then download, unzip and lastly remove zip MOT16 data
-if [[ ! -d ~/datasets/MOT/MOT16/train ]] && [[ ! -d ~/datasets/MOT/MOT16/test ]]
-then
-	# download data
-	echo 'Downloading MOT16 data...'
-	wget -nc https://motchallenge.net/data/MOT16.zip -O ~/datasets/MOT/MOT16.zip
-	# unzip
-    unzip -q ~/datasets/MOT/MOT16.zip
-    echo 'Done.'
-	# delete zip
-	rm ~/datasets/MOT/MOT16.zip
-fi
+# # clone evaluation repo if it does not exist
+# if [ ! -d MOT16_eval/TrackEval ]
+# then
+# 	echo 'Cloning official MOT16 evaluation repo'
+# 	git clone https://github.com/JonathonLuiten/TrackEval TrackEval
+# 	# download quick start data folder if it does not exist
+# 	if [ ! -d ~/datasets/MOT/data ]
+# 	then
+# 		# download data
+# 		echo 'Downloading TrackEval data...'
+# 		wget -nc https://omnomnom.vision.rwth-aachen.de/data/TrackEval/data.zip -O ~/datasets/MOT/data.zip
+# 		# unzip
+# 		unzip -q ~/datasets/MOT/data.zip
+# 		echo 'Done.'
+# 		# delete zip
+# 		rm ~/datasets/MOT/data.zip
+# 	fi
+# fi
+#
+#
+# # if MOT16 data not unziped, then download, unzip and lastly remove zip MOT16 data
+# if [[ ! -d ~/datasets/MOT/MOT16/train ]] && [[ ! -d ~/datasets/MOT/MOT16/test ]]
+# then
+# 	# download data
+# 	echo 'Downloading MOT16 data...'
+# 	wget -nc https://motchallenge.net/data/MOT16.zip -O ~/datasets/MOT/MOT16.zip
+# 	# unzip
+#     unzip -q ~/datasets/MOT/MOT16.zip
+#     echo 'Done.'
+# 	# delete zip
+# 	rm ~/datasets/MOT/MOT16.zip
+# fi
 
 
 # create folder to place tracking results for this method
