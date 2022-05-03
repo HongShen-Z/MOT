@@ -211,8 +211,8 @@ def detect(opt):
 
                         vertical = bbox_w / bbox_h < aspect_ratio
                         # for Pedestrian
-                        # if not vertical:
-                        #     continue
+                        if not vertical:
+                            continue
 
                         id = output[4]
                         cls = output[5]
