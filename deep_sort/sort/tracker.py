@@ -181,9 +181,9 @@ class Tracker:
         det_candidates_high = []
         det_candidates_low = []
         for i in range(len(detections)):
-            if detections[i].confidence > 0.5:
+            if detections[i].confidence > 0.7:
                 det_candidates_high.append(i)
-            elif detections[i].confidence > 0.3:
+            elif detections[i].confidence > 0.2:
                 det_candidates_low.append(i)
 
         matches_a, unmatched_tracks_a, unmatched_detections_high = linear_assignment.min_cost_matching(
