@@ -181,7 +181,7 @@ class Tracker:
         det_candidates_high = []
         det_candidates_low = []
         for i in range(len(detections)):
-            if detections[i].confidence > 0.7:
+            if detections[i].confidence > 0.6:
                 det_candidates_high.append(i)
             elif detections[i].confidence > 0.1:
                 det_candidates_low.append(i)
