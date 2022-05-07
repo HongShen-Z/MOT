@@ -13,7 +13,7 @@ conda activate torch1.10
 
 set +e
 
-exp_name='exp_wo-filter'
+exp_name='exp_wo-rematching'
 # exp_name='cd_v5m_osnet_x0_25'
 
 
