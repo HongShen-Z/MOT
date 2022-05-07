@@ -205,20 +205,20 @@ class Tracker:
         )
 
         # Associate remaining tracks together with unconfirmed tracks using IOU.
-        # iou_track_candidates = unmatched_tracks_a + unmatched_tracks_b
-        #
-        # matches_c, unmatched_tracks_c, unmatched_detections_low = linear_assignment.min_cost_matching(
-        #     iou_matching.iou_cost,
-        #     self.max_iou_distance - 0.3,
-        #     self.tracks,
-        #     detections,
-        #     iou_track_candidates,
-        #     det_candidates_low,
-        # )
+        iou_track_candidates = unmatched_tracks_a + unmatched_tracks_b
 
-        matches = matches_a + matches_b
-        unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
-        # unmatched_tracks = list(set(unmatched_tracks_c))
+        matches_c, unmatched_tracks_c, unmatched_detections_low = linear_assignment.min_cost_matching(
+            iou_matching.iou_cost,
+            self.max_iou_distance - 0.3,
+            self.tracks,
+            detections,
+            iou_track_candidates,
+            det_candidates_low,
+        )
+
+        matches = matches_a + matches_b + matches_c
+        # unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
+        unmatched_tracks = list(set(unmatched_tracks_c))
         return matches, unmatched_tracks, unmatched_detections_high
 
     def _initiate_track(self, detection, class_id):
