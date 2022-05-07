@@ -226,7 +226,8 @@ def detect(opt):
 
                         if save_vid or save_crop or show_vid:  # Add bbox to image
                             c = int(cls)  # integer class
-                            label = f'{id} {names[c]} {conf:.2f}'
+                            # label = f'{id} {names[c]} {conf:.2f}'
+                            label = f'{id} {conf:.2f}'
                             bboxes = output[0:4]
                             annotator.box_label(
                                 bboxes, label, color=colors(c, True))
