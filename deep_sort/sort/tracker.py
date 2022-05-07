@@ -186,26 +186,26 @@ class Tracker:
             elif detections[i].confidence > 0.2:
                 det_candidates_low.append(i)
 
-        # matches_a, unmatched_tracks_a, unmatched_detections_high = linear_assignment.min_cost_matching(
-        #     self._full_cost_metric,
-        #     linear_assignment.INFTY_COST - 1,
-        #     self.tracks,
-        #     detections,
-        #     confirmed_tracks,
-        #     det_candidates_high,
-        # )
+        matches_a, unmatched_tracks_a, unmatched_detections_high = linear_assignment.min_cost_matching(
+            self._full_cost_metric,
+            linear_assignment.INFTY_COST - 1,
+            self.tracks,
+            detections,
+            confirmed_tracks,
+            det_candidates_high,
+        )
 
         matches_b, unmatched_tracks_b, unmatched_detections_high = linear_assignment.min_cost_matching(
             iou_matching.iou_cost,
             self.max_iou_distance,
             self.tracks,
             detections,
-            unconfirmed_tracks + confirmed_tracks,
-            det_candidates_high,
+            unconfirmed_tracks,
+            unmatched_detections_high,
         )
 
         # Associate remaining tracks together with unconfirmed tracks using IOU.
-        iou_track_candidates = unmatched_tracks_b
+        iou_track_candidates = unmatched_tracks_a + unmatched_tracks_b
 
         matches_c, unmatched_tracks_c, unmatched_detections_low = linear_assignment.min_cost_matching(
             iou_matching.iou_cost,
@@ -216,10 +216,10 @@ class Tracker:
             det_candidates_low,
         )
 
-        matches = matches_b + matches_c
+        matches = matches_a + matches_b + matches_c
         # unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
         unmatched_tracks = list(set(unmatched_tracks_c))
-        return matches, unmatched_tracks, unmatched_detections_high
+        return matches, unmatched_tracks, unmatched_detections_high + unmatched_detections_low
 
     def _initiate_track(self, detection, class_id):
         mean, covariance = self.kf.initiate(detection.to_xyah())
