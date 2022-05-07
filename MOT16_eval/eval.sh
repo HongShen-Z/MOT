@@ -13,7 +13,7 @@ conda activate torch1.10
 
 set +e
 
-exp_name='exp_0.7_0.2-640'
+exp_name='exp_wo-full'
 # exp_name='cd_v5m_osnet_x0_25'
 
 
@@ -69,7 +69,7 @@ do
 			mv ~/datasets/MOT/MOT16/train/$i/img1/ ~/datasets/MOT/MOT16/train/$i/$i
 		fi
 		# run inference on sequence frames
-		python3 track.py --name $exp_name --conf-thres 0.2 --imgsz 640 --aspect-ratio 0.8 --source ~/datasets/MOT/MOT16/train/$i/$i --save-txt --yolo_model ~/.cache/torch/checkpoints/crowdhuman_yolov5m.pt --deep_sort_model ~/.cache/torch/checkpoints/osnet_x0_25_msmt17.pth --classes 0 --exist-ok --device $CUDA_VISIBLE_DEVICES
+		python3 track.py --name $exp_name --conf-thres 0.2 --imgsz 1280 --aspect-ratio 0.8 --source ~/datasets/MOT/MOT16/train/$i/$i --save-txt --yolo_model ~/.cache/torch/checkpoints/crowdhuman_yolov5m.pt --deep_sort_model ~/.cache/torch/checkpoints/osnet_x0_25_msmt17.pth --classes 0 --exist-ok --device $CUDA_VISIBLE_DEVICES
 	    # move generated results to evaluation repo
 	) &
 	# https://unix.stackexchange.com/questions/103920/parallelize-a-bash-for-loop
