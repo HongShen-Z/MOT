@@ -116,7 +116,7 @@ def detect(opt):
                 max_dist=cfg.DEEPSORT.MAX_DIST,
                 max_iou_distance=cfg.DEEPSORT.MAX_IOU_DISTANCE,
                 max_age=cfg.DEEPSORT.MAX_AGE, n_init=cfg.DEEPSORT.N_INIT, nn_budget=cfg.DEEPSORT.NN_BUDGET,
-                _lambda=0.5, _alpha=0.4,
+                _lambda=0, _alpha=0,
             )
         )
     outputs = [None] * nr_sources
