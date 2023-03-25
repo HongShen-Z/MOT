@@ -48,7 +48,33 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
+from matplotlib import rcParams
 from mpl_toolkits.mplot3d.axes3d import Axes3D  # 3D引擎
+
+# config = {
+#     "font.family":'serif',
+#     "mathtext.fontset":'stix',
+#     "font.serif": ['Times New Roman'],
+# }
+# rcParams.update(config)
+
+matplotlib.use("pgf")
+pgf_config = {
+    "font.family":'serif',
+    "pgf.rcfonts": False,
+    "text.usetex": True,
+    "pgf.preamble": [
+        r"\usepackage{unicode-math}",
+        r"\setmathfont{XITS Math}",
+        # 这里注释掉了公式的XITS字体，可以自行修改
+        r"\setmainfont{Times New Roman}",
+        r"\usepackage{xeCJK}",
+        r"\xeCJKsetup{CJKmath=true}",
+        r"\setCJKmainfont{SimSun}",
+    ],
+}
+rcParams.update(pgf_config)
 
 month = [0., 0.2, 0.4, 0.6, 0.8, 1.]
 
@@ -75,9 +101,13 @@ for m in month:
             alpha=0.9,  # alpha 透明度
             width=0.06)
 
-ax3.set_xlabel(r'$\beta$')
-ax3.set_ylabel(r'$\alpha$')
-ax3.set_zlabel('MOTA(%)')
+ax3.set_xlabel(r'$\gamma$')
+ax3.set_ylabel(r'$\eta$')
+ax3.set_zlabel(r'MOTA')
+# 获取纵坐标标签对象
+zlabel = ax3.zaxis.get_label()
+# 旋转纵坐标标签
+zlabel.set_rotation(90)
 ax3.set_zticks([0, 0.5, 1, 1.5, 2, 2.5, 3], [56.5, 57.0, 57.5, 58.0, 58.5, 59.0, 59.5])
 
 # plt.grid()
@@ -85,7 +115,7 @@ ax3.set_zticks([0, 0.5, 1, 1.5, 2, 2.5, 3], [56.5, 57.0, 57.5, 58.0, 58.5, 59.0,
 # plt.gca().invert_yaxis()
 # plt.gca().invert_xaxis()
 
-plt.savefig("4.png", dpi=500, bbox_inches='tight')
+plt.savefig("info.jpg", dpi=500, bbox_inches='tight')
 # plt.show()
 
 # print(y[x == month[7]])
