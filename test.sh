@@ -12,3 +12,8 @@ conda activate torch1.10
 echo '1...'
 set +e
 echo '2...'
+exp_name='deepsort-0.3'
+
+
+mkdir -p MOT16_eval/TrackEval/data/MOT16-train/$exp_name/data/
+echo '3...'
