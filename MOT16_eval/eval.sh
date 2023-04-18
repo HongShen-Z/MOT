@@ -51,7 +51,7 @@ mkdir -p MOT16_eval/TrackEval/data/MOT16-train/$exp_name/data/
 
 # inference on 4 MOT16 video sequences at the same time
 # suits a 4GB GRAM GPU, feel free to increase if you have more memory
-#N=2
+N=1
 
 # generate tracking results for each sequence
 echo 'Generating tracking results for each sequence...'
@@ -61,22 +61,22 @@ echo 'Generating tracking results for each sequence...'
  do
  	(
  		# change name to inference source so that each thread write to its own .txt file
-# 		if [ ! -d ~/datasets/MOT/MOT16/train/$i/$i ]
-# 		then
-# 			mv ~/datasets/MOT/MOT16/train/$i/img1/ ~/datasets/MOT/MOT16/train/$i/$i
-# 		fi
+ 		if [ ! -d ~/datasets/MOT/MOT16/train/$i/$i ]
+ 		then
+ 			mv ~/datasets/MOT/MOT16/train/$i/img1/ ~/datasets/MOT/MOT16/train/$i/$i
+ 		fi
  		# run inference on sequence frames
  		python3 track.py --name $exp_name --conf-thres 0.3 --imgsz 1280 --aspect-ratio 0.8 --source ~/datasets/MOT/MOT16/train/$i/$i --save-txt --yolo_model ~/.cache/torch/checkpoints/crowdhuman_yolov5m.pt --deep_sort_model ~/.cache/torch/checkpoints/osnet_x0_25_msmt17.pth --classes 0 --exist-ok --device $CUDA_VISIBLE_DEVICES
  	    # move generated results to evaluation repo
- 	) #&
+ 	) &
  	# https://unix.stackexchange.com/questions/103920/parallelize-a-bash-for-loop
  	# allow to execute up to $N jobs in parallel
-#     if [[ $(jobs -r -p | wc -l) -ge $N ]]
-# 	then
-#         # now there are $N jobs already running, so wait here for any job
-#         # to be finished so there is a place to start next one.
-#         wait
-#     fi
+     if [[ $(jobs -r -p | wc -l) -ge $N ]]
+ 	then
+         # now there are $N jobs already running, so wait here for any job
+         # to be finished so there is a place to start next one.
+         wait
+     fi
  done
 
 #for i in MOT16-01 MOT16-03 MOT16-06 MOT16-07 MOT16-08 MOT16-12 MOT16-14
@@ -103,7 +103,7 @@ echo 'Generating tracking results for each sequence...'
 
 # no more jobs to be started but wait for pending jobs
 # (all need to be finished)
-#wait
+wait
 echo "Inference on all MOT16 sequences DONE"
 
  echo "Moving data from experiment folder to MOT16"
