@@ -54,7 +54,7 @@ mkdir -p MOT16_eval/TrackEval/data/MOT16-train/$exp_name/data/
 
 # inference on 4 MOT16 video sequences at the same time
 # suits a 4GB GRAM GPU, feel free to increase if you have more memory
-N=7
+N=4
 
 # generate tracking results for each sequence
 echo 'Generating tracking results for each sequence...'
