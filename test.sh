@@ -10,3 +10,5 @@ source activate
 conda deactivate
 conda activate torch1.10
 echo '1...'
+set +e
+echo '2...'
