@@ -9,13 +9,11 @@ module load anaconda3
 source activate
 conda deactivate
 conda activate torch1.10
-
-
+echo '1...'
 set +e
-
+echo '2...'
 exp_name='deepsort-0.3'
 # exp_name='cd_v5m_osnet_x0_25'
-
 
 # # clone evaluation repo if it does not exist
 # if [ ! -d MOT16_eval/TrackEval ]
@@ -50,7 +48,7 @@ exp_name='deepsort-0.3'
 # 	rm ~/datasets/MOT/MOT16.zip
 # fi
 
-
+echo '3...'
 # create folder to place tracking results for this method
 mkdir -p MOT16_eval/TrackEval/data/MOT16-train/$exp_name/data/
 
