@@ -71,22 +71,19 @@ function process_sequence() {
 
 # list of sequences to process
 sequences=("MOT16-02" "MOT16-04" "MOT16-05" "MOT16-09" "MOT16-10" "MOT16-11" "MOT16-13")
-# create a lock file
-lock_file=/tmp/mylockfile.lock
-exec 200>$lock_file
+running_processes=0
 
 # loop over sequences and start processes
 for sequence in "${sequences[@]}"; do
-    # acquire lock
-    flock -n 200 || { echo "could not acquire lock"; exit 1; }
+    # check if there are any free processes
+    if [ $running_processes -ge $N ]; then
+        wait -n
+        ((running_processes--))
+    fi
 
     # start process in background
     process_sequence "$sequence" &
-
-    # wait for any process to complete before starting the next one
-    while read -u 200 -t 1 && [[ $? -eq 0 ]]; do
-        :
-    done
+    ((running_processes++))
 done
 
 # wait for all processes to complete
