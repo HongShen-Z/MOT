@@ -66,7 +66,7 @@ function process_sequence() {
 #        mv "~/datasets/MOT/MOT16/train/$1/img1" "~/datasets/MOT/MOT16/train/$1/$1"
 #    fi
     # run inference on sequence frames
-    python3 track.py --name $exp_name --conf-thres 0.3 --imgsz 1280 --aspect-ratio 0.8 --source ~/datasets/MOT/MOT16/train/$i/$i --save-txt --yolo_model ~/.cache/torch/checkpoints/crowdhuman_yolov5m.pt --deep_sort_model ~/.cache/torch/checkpoints/osnet_x0_25_msmt17.pth --classes 0 --exist-ok --device $CUDA_VISIBLE_DEVICES
+    python3 track.py --name $exp_name --conf-thres 0.3 --imgsz 1280 --aspect-ratio 0.8 --source ~/datasets/MOT/MOT16/train/$1/$1 --save-txt --yolo_model ~/.cache/torch/checkpoints/crowdhuman_yolov5m.pt --deep_sort_model ~/.cache/torch/checkpoints/osnet_x0_25_msmt17.pth --classes 0 --exist-ok --device $CUDA_VISIBLE_DEVICES
 }
 
 # list of sequences to process
