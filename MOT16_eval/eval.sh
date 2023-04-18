@@ -62,9 +62,9 @@ echo 'Generating tracking results for each sequence...'
 # function to process a sequence
 function process_sequence() {
     # change name to inference source so that each process write to its own .txt file
-    if [ ! -d "~/datasets/MOT/MOT16/train/$1/$1" ]; then
-        mv "~/datasets/MOT/MOT16/train/$1/img1" "~/datasets/MOT/MOT16/train/$1/$1"
-    fi
+#    if [ ! -d "~/datasets/MOT/MOT16/train/$1/$1" ]; then
+#        mv "~/datasets/MOT/MOT16/train/$1/img1" "~/datasets/MOT/MOT16/train/$1/$1"
+#    fi
     # run inference on sequence frames
     python3 track.py --name $exp_name --conf-thres 0.3 --imgsz 1280 --aspect-ratio 0.8 --source ~/datasets/MOT/MOT16/train/$i/$i --save-txt --yolo_model ~/.cache/torch/checkpoints/crowdhuman_yolov5m.pt --deep_sort_model ~/.cache/torch/checkpoints/osnet_x0_25_msmt17.pth --classes 0 --exist-ok --device $CUDA_VISIBLE_DEVICES
 }
