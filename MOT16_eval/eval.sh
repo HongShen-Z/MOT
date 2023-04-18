@@ -72,7 +72,7 @@ function process_sequence() {
 # list of sequences to process
 sequences=("MOT16-02" "MOT16-04" "MOT16-05" "MOT16-09" "MOT16-10" "MOT16-11" "MOT16-13")
 # create a lock file
-lock_file=~/tmp/mylockfile.lock
+lock_file=/tmp/mylockfile.lock
 exec 200>$lock_file
 
 # loop over sequences and start processes
